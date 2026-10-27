@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>MeterMyData browser self-test</title></head>
+<body>
+<p>Runs the engine in this browser on the fixture HAR (same origin) and prints the report JSON. Used by the parity check; nothing here is uploaded.</p>
+<pre id="out">running</pre>
+<script src="./app.js"></script>
+<script>
+(async () => {
+  const out = document.getElementById("out");
+  try {
+    const q = new URLSearchParams(location.search);
+    const harUrl = q.get("har") || "./sample.har";
+    const har = await fetch(harUrl).then((r) => r.json());
+    const profiles = await fetch("./providers.json").then((r) => r.json());
+    const read = MMD.readHar(har);
+    const meter = new MMD.Meter();
+    for (const e of read.entries) await meter.meter(e);
+    const report = MMD.buildReport({ toolVersion: "0.1.3", chunking: MMD.CDC_V1, sources: meter.totals(), stats: meter.store.stats(), profiles,
+      input: { kind: "har", label: "sample.har", responses: read.entries.length, skipped: read.skipped.length }, history: { enabled: false } });
+    delete report.generatedAt;
+    // ?share=dry posts a dryRun share payload (built from a copy of the report with real-looking hosts) to the Index endpoint and includes the answer
+    let share = null;
+    if (q.get("share")) {
+      const copy = JSON.parse(JSON.stringify(report)); copy.generatedAt = new Date().toISOString();
+      copy.sources = copy.sources.map((s, i) => ({ ...s, host: i === 0 ? "api.stripe.com" : "hist.databento.com", provider: i === 0 ? "Stripe API" : "Databento (historical)", basis: i === 0 ? "transactions" : "decoded-bytes" }));
+      const payload = MMD.buildSharePayload(copy, "browser", { dryRun: true });
+      const url = q.get("shareUrl") || MMD.SHARE_URL;
+      try { const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) }); share = { status: r.status, body: await r.json().catch(() => null) }; }
+      catch (e) { share = { error: String(e) }; }
+    }
+    const result = JSON.stringify({ ok: true, ua: navigator.userAgent, report, share });
+    out.textContent = result;
+    const post = q.get("post"); if (post) await fetch(post.startsWith("http") ? post : "/__result", { method: "POST", headers: { "content-type": "text/plain" }, body: result });
+  } catch (e) {
+    const result = JSON.stringify({ ok: false, error: String(e && e.stack || e) });
+    out.textContent = result;
+    const post = new URLSearchParams(location.search).get("post"); if (post) await fetch(post.startsWith("http") ? post : "/__result", { method: "POST", headers: { "content-type": "text/plain" }, body: result });
+  }
+})();
+</script>
+</body></html>

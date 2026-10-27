@@ -1,0 +1,65 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [20, 22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ matrix.node }}" }
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - name: CLI parity on the fixture HAR
+        shell: bash
+        run: |
+          node dist/cli.js har test/fixtures/sample.har --no-open --json out.json
+          node -e "const a=require('./out.json'),b=require('./test/fixtures/sample.expected.json');delete a.generatedAt;delete a.history.to;delete b.history.to;const s=JSON.stringify;if(s(a.totals)!==s(b.totals)||s(a.sources.map(x=>[x.host,x.repeatBytes,x.decodedBytes]))!==s(b.sources.map(x=>[x.host,x.repeatBytes,x.decodedBytes])))process.exit(1);console.log('parity ok',a.totals.repeatPct.toFixed(2)+'%')"
+      - name: Browser parity (headless Chrome/Edge on the runner)
+        shell: bash
+        run: node scripts/browser-parity.mjs
+      - name: Packed tarball installs and runs
+        shell: bash
+        run: |
+          TGZ=$(npm pack --silent | tail -1)
+          mkdir -p /tmp/npxtest && cd /tmp/npxtest && npm init -y >/dev/null && npm install --silent "$GITHUB_WORKSPACE/$TGZ"
+          npx metermydata --version
+          npx metermydata har "$GITHUB_WORKSPACE"/test/fixtures/sample.har --no-open | head -1
+
+  binary:
+    # the single-file executables: compiled with Bun on each OS and driven through HAR mode and the
+    # live forwarder (gzip from api.github.com) so the Bun runtime path is proven, not just Node's
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: npm ci
+      - run: npm run build
+      - name: Compile and smoke the binary
+        shell: bash
+        run: |
+          set -e
+          bun build --compile --minify dist/cli.js --outfile ./mmd-bin
+          ./mmd-bin --version
+          ./mmd-bin har test/fixtures/sample.har --no-open --json bin-har.json
+          node -e "const r=require('./bin-har.json');if(Math.abs(r.totals.repeatPct-56.107)>0.01)process.exit(1);console.log('binary har ok',r.totals.repeatPct.toFixed(2)+'%')"
+          ./mmd-bin --allow api.github.com --port 7798 --no-open --json bin-fw.json > bin-fw.log 2>&1 &
+          sleep 3
+          for i in 1 2 3 4 5; do curl -s -o body.gz -D headers.txt -w "%{http_code} " -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept-Encoding: gzip" -H "User-Agent: metermydata-ci" http://127.0.0.1:7798/https://api.github.com/repos/nodejs/node; done; echo
+          grep -i "^content-encoding: gzip" headers.txt
+          python3 -c "import gzip; raw=open('body.gz','rb').read(); d=gzip.decompress(raw); assert d.startswith(b'{'); print('client received intact gzip', len(raw), '->', len(d))"
+          curl -s http://127.0.0.1:7798/__stop; sleep 3
+          cat bin-fw.log
+          node -e "const r=require('./bin-fw.json');const s=r.sources[0];if(!s||s.responses!==5||s.decodedBytes<5000||Math.abs(s.repeatPct-80)>0.5)process.exit(1);console.log('binary forwarder ok',s.repeatPct.toFixed(1)+'% of',s.decodedBytes,'decoded bytes')"

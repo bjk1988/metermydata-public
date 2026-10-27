@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeterMyData — drop a HAR, see what you paid for twice</title>
+<meta name="description" content="Free meter that shows how much of the data you received was a repeat. Runs in your browser. Nothing is uploaded.">
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="https://www.metermydata.com">MeterMyData</a>
+  <nav><a href="https://www.metermydata.com">Home</a> <a href="https://www.metermydata.com/#waitlist">Waitlist</a></nav>
+</header>
+<main>
+  <h1>Drop a HAR file. See how much was a repeat.</h1>
+  <p class="lead">Everything runs in this browser tab with its own SHA-256. The file is never uploaded. HAR files can contain credentials, so treat them like one.</p>
+  <div id="drop" class="drop">
+    <p><b>Drop your .har file here</b> or <label for="file" class="link">choose a file</label></p>
+    <input id="file" type="file" accept=".har,application/json" hidden>
+    <p class="small">Chrome and Edge: DevTools → Network → right-click → <b>Save all as HAR with content</b>. Firefox: Network → gear → Save All As HAR. Safari: Network → Export.</p>
+  </div>
+  <p id="status" class="status"></p>
+  <div id="report"></div>
+  <section class="rules">
+    <h2>How to read it</h2>
+    <ul>
+      <li><b>Repeated bytes</b> are chunks whose fingerprint was already seen from the same host in this file. Repeats are never counted across hosts.</li>
+      <li><b>Wire bytes</b> come from the HAR's own size fields and are labelled observed, estimated or unavailable. Compression is nonlinear, so repeated decoded bytes do not equal repeated transfer bytes.</li>
+      <li><b>Dollars</b> appear only for providers that bill by bytes, and only after you enter and confirm your own contract rate. Everywhere else you get a percentage and nothing more.</li>
+    </ul>
+  </section>
+</main>
+<footer>Free. Local. Nothing leaves your machine. <a href="https://www.metermydata.com/#waitlist">Tell me when I can stop paying for repeats</a>.</footer>
+<script src="./app.js"></script>
+</body>
+</html>

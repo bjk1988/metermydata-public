@@ -1,0 +1,76 @@
+{
+ "schema": "metermydata-report/1",
+ "tool": {
+  "name": "metermydata",
+  "version": "0.1.3"
+ },
+ "chunking": {
+  "id": "mmd-cdc-v1",
+  "minChunk": 2048,
+  "maxChunk": 65536,
+  "mask": 8191,
+  "gearSeed": 2654435769
+ },
+ "scope": "per-host",
+ "history": {
+  "enabled": false,
+  "retained": 40,
+  "evicted": 0
+ },
+ "input": {
+  "kind": "har",
+  "label": "sample.har",
+  "responses": 15,
+  "skipped": 2
+ },
+ "sources": [
+  {
+   "host": "api.poller.example",
+   "responses": 10,
+   "chunks": 40,
+   "decodedBytes": 600390,
+   "repeatBytes": 449073,
+   "inRunRepeatBytes": 449073,
+   "historyRepeatBytes": 0,
+   "repeatPct": 74.79688202668265,
+   "wireBytes": 150090,
+   "wireStatus": "observed",
+   "wireUnavailableResponses": 0,
+   "basis": "unknown",
+   "store": {
+    "retained": 13,
+    "evicted": 0,
+    "cap": 1000000
+   }
+  },
+  {
+   "host": "feed.fresh.example",
+   "responses": 5,
+   "chunks": 27,
+   "decodedBytes": 200000,
+   "repeatBytes": 0,
+   "inRunRepeatBytes": 0,
+   "historyRepeatBytes": 0,
+   "repeatPct": 0,
+   "wireBytes": 200000,
+   "wireStatus": "observed",
+   "wireUnavailableResponses": 0,
+   "basis": "unknown",
+   "store": {
+    "retained": 27,
+    "evicted": 0,
+    "cap": 1000000
+   }
+  }
+ ],
+ "totals": {
+  "responses": 15,
+  "decodedBytes": 800390,
+  "repeatBytes": 449073,
+  "repeatPct": 56.10677294818775,
+  "inRunRepeatBytes": 449073,
+  "historyRepeatBytes": 0,
+  "wireBytes": 350090,
+  "wireStatus": "observed"
+ }
+}

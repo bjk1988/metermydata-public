@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Databento (historical)",
+    "hosts": ["hist.databento.com", "*.databento.com"],
+    "basis": "decoded-bytes",
+    "source": "https://databento.com/docs/faqs/historical-data",
+    "note": "Databento meters historical data by uncompressed binary size regardless of delivered format. Rate depends on dataset and schema; enter yours."
+  },
+  {
+    "name": "Amazon S3 (data transfer out)",
+    "hosts": ["*.amazonaws.com"],
+    "basis": "encoded-bytes",
+    "source": "https://aws.amazon.com/s3/pricing/",
+    "note": "Data transfer out to the internet is billed per GB on bytes transferred (compressed if compressed). Billed to the bucket owner. Tiered; enter your effective rate.",
+    "defaultRateUsdPerGb": 0.09
+  },
+  {
+    "name": "Google Cloud Storage (egress)",
+    "hosts": ["storage.googleapis.com", "*.storage.googleapis.com"],
+    "basis": "encoded-bytes",
+    "source": "https://cloud.google.com/storage/pricing",
+    "note": "Network egress billed per GB on bytes transferred, to the bucket owner. Enter your effective rate."
+  },
+  {
+    "name": "Cloudflare R2",
+    "hosts": ["*.r2.cloudflarestorage.com", "*.r2.dev"],
+    "basis": "encoded-bytes",
+    "source": "https://developers.cloudflare.com/r2/pricing/",
+    "note": "R2 egress to the internet is free; repeats cost bandwidth and time, not dollars.",
+    "defaultRateUsdPerGb": 0
+  },
+  {
+    "name": "Vercel (bandwidth)",
+    "hosts": ["*.vercel.app", "*.vercel.com"],
+    "basis": "encoded-bytes",
+    "source": "https://vercel.com/docs/pricing/networking",
+    "note": "Fast Data Transfer is billed per GB to the site operator, not to the visitor. Only meaningful if you operate the site."
+  },
+  {
+    "name": "Stripe API",
+    "hosts": ["api.stripe.com", "dashboard.stripe.com"],
+    "basis": "transactions",
+    "source": "https://stripe.com/pricing",
+    "note": "Stripe charges per payment, not per API byte. Repetition here is bandwidth and time, never a Stripe fee."
+  },
+  {
+    "name": "OpenAI API",
+    "hosts": ["api.openai.com"],
+    "basis": "tokens",
+    "source": "https://openai.com/api/pricing/",
+    "note": "Billed per input and output token, with cached-input discounts. Response bytes are not the billing unit."
+  },
+  {
+    "name": "Anthropic API",
+    "hosts": ["api.anthropic.com"],
+    "basis": "tokens",
+    "source": "https://www.anthropic.com/pricing",
+    "note": "Billed per input and output token, with prompt caching. Response bytes are not the billing unit."
+  },
+  {
+    "name": "Polygon.io",
+    "hosts": ["api.polygon.io", "*.polygon.io"],
+    "basis": "subscription",
+    "source": "https://polygon.io/pricing",
+    "note": "Flat subscription tiers; repetition is bandwidth and time, not a per-byte fee."
+  },
+  {
+    "name": "GitHub API",
+    "hosts": ["api.github.com"],
+    "basis": "unknown",
+    "source": "https://docs.github.com/en/rest",
+    "note": "Rate-limited, not metered by bytes for most plans."
+  }
+]

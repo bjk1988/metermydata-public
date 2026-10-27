@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;500;600&display=swap');
+:root { --bg: #05060a; --panel: rgba(255,255,255,.04); --hair: rgba(255,255,255,.12); --text: #f2f2f0; --secondary: #c9ccd1; --muted: #8b9099; --accent: #c9a96e; --warn: #ffd666; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 Inter, "Segoe UI", Arial, sans-serif; }
+header, main, footer { max-width: 1080px; margin: 0 auto; padding: 18px 20px; }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--hair); }
+.brand { color: var(--text); font-family: Marcellus, Georgia, serif; font-size: 22px; letter-spacing: .02em; text-decoration: none; }
+nav a { color: var(--secondary); margin-left: 18px; text-decoration: none; font-size: 14px; }
+h1 { font-family: Marcellus, Georgia, serif; font-weight: 400; font-size: 36px; margin: 28px 0 10px; letter-spacing: .01em; }
+h2 { font-family: Marcellus, Georgia, serif; font-weight: 400; font-size: 22px; }
+.lead { color: var(--secondary); max-width: 70ch; }
+.drop { border: 1px dashed var(--hair); border-radius: 10px; padding: 40px; text-align: center; background: var(--panel); margin: 22px 0; }
+.drop.over { border-color: var(--accent); }
+.drop .link { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.small { color: var(--muted); font-size: 14px; }
+.status { color: var(--warn); min-height: 1.5em; }
+.hero { background: var(--panel); border: 1px solid var(--hair); border-radius: 10px; padding: 26px; margin: 16px 0; }
+.hero .big { font-family: Marcellus, Georgia, serif; font-size: 76px; color: var(--accent); line-height: 1; }
+.hero .sub { font-size: 20px; margin-top: 10px; color: var(--text); }
+.hero .meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.hero .usd { color: var(--warn); margin-top: 8px; }
+table.rows { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+table.rows th, table.rows td { text-align: left; padding: 9px 6px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+table.rows th { color: var(--muted); font-family: Marcellus, Georgia, serif; font-weight: 400; letter-spacing: .03em; }
+.pct { color: var(--accent); font-weight: 600; }
+.prov, .note { color: var(--muted); font-size: 12px; }
+.muted { color: var(--muted); }
+table.rows input[type=number] { width: 90px; background: var(--bg); color: var(--text); border: 1px solid var(--hair); border-radius: 6px; padding: 4px; }
+.confirm { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.warn { background: rgba(255,214,102,.08); border: 1px solid rgba(255,214,102,.3); color: var(--warn); padding: 12px; border-radius: 8px; margin: 12px 0; }
+.cardwrap { margin: 16px 0; }
+canvas.card { width: 100%; max-width: 600px; height: auto; border-radius: 8px; border: 1px solid var(--hair); }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0 32px; }
+.btn { background: transparent; color: var(--text); padding: 10px 16px; border-radius: 8px; text-decoration: none; border: 1px solid var(--hair); font-size: 14px; }
+.btn.primary { background: var(--accent); color: #05060a; font-weight: 600; border-color: var(--accent); }
+.rules { color: var(--secondary); }
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--hair); margin-top: 24px; }
+footer a, a { color: var(--accent); }
+.share { margin: 8px 0 24px; }
+.share pre.preview { background: rgba(255,255,255,.04); border: 1px solid var(--hair); border-radius: 8px; padding: 12px; font-size: 12px; max-height: 320px; overflow: auto; color: var(--secondary); }
