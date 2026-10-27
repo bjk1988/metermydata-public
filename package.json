@@ -1,6 +1,6 @@
 {
   "name": "metermydata",
-  "version": "0.1.3",
+  "version": "0.1.6",
   "description": "Free, local-only meter that shows how much of the data you received was a repeat.",
   "license": "SEE LICENSE IN LICENSE.md",
   "type": "module",
@@ -49,5 +49,8 @@
     "har",
     "proxy"
   ],
-  "author": "Atreius Enterprises <brad.kavin@atreius.com>"
+  "author": "Atreius Enterprises <brad.kavin@atreius.com>",
+  "bugs": {
+    "url": "https://github.com/bjk1988/metermydata-public/issues"
+  }
 }

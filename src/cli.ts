@@ -13,7 +13,7 @@ import { Meter, readHar, buildReport, fmtBytes, CDC_V1, type ProviderProfile, ty
 import { startForwarder } from "./forwarder.js";
 import { APP_JS, APP_CSS, PROVIDERS } from "./generated/embedded.js";
 
-const VERSION = "0.1.3";
+const VERSION = "0.1.6";
 const major = Number(process.versions.node.split(".")[0]);
 if (major < 20) { console.error(`metermydata needs Node 20 or newer; this is ${process.versions.node}. Install Node 20 LTS and run again.`); process.exit(1); }
 

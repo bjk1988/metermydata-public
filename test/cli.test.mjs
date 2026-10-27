@@ -14,7 +14,9 @@ const homeEnv = { ...process.env, HOME: tmp, USERPROFILE: tmp, MMD_ALLOW_PRIVATE
 const run = (args, env = homeEnv) => { const r = spawnSync(process.execPath, [cli, ...args], { encoding: "utf8", env }); return { code: r.status, out: r.stdout + r.stderr }; };
 
 test("--version and --help", () => {
-  assert.equal(run(["--version"]).out.trim(), "0.1.3");
+  // the CLI's VERSION and package.json must not drift apart between releases
+  const pkgVersion = JSON.parse(fs.readFileSync(path.join(here, "..", "package.json"), "utf8")).version;
+  assert.equal(run(["--version"]).out.trim(), pkgVersion);
   const h = run(["--help"]); assert.equal(h.code, 0); assert.match(h.out, /npx metermydata --allow/);
 });
 
